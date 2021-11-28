@@ -7,6 +7,7 @@ import broker from './broker/settings'
 // Variables
 const app = express();
 const PORT = process.env.NODE_DOCKER_PORT || 3001;
+const MONGO_URI = `mongodb://mongodb:${process.env.MONGODB_DOCKER_PORT}/bookingDb`
 const BOOKING_REQUEST_TOPIC = "booking/request/dentist";
 const BOOKING_RESPONSE_TOPIC = "booking/response/dentist";
 
