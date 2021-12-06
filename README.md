@@ -4,7 +4,7 @@ A microservice that takes in booking requests, passes booking confirmations to t
 ## Getting started 
 - Create an .env file with the following template in the .env.sample file.
 
-- docker-compose up --build to run!
+- `docker-compose up --build` to run!
 
 ## To run stand-alone locally:
 - `npm install` + `npm start`
