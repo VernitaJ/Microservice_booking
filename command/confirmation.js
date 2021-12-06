@@ -13,7 +13,7 @@ const createConfirmation = Joi.object({
     date: Joi.date()
         .required(),
     time: Joi.string()
-        .alphanum()
+        .regex(/^([0-9]{2})\:([0-9]{2})$/)
         .required()
 });
 
@@ -30,7 +30,7 @@ const updateConfirmation = Joi.object({
     date: Joi.date()
         .required(),
     time: Joi.string()
-        .alphanum()
+        .regex(/^([0-9]{2})\:([0-9]{2})$/)
         .required()
 });
 

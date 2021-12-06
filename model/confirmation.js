@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 
 const confirmation = new mongoose.Schema({
-    userId: String,
-    requestId: String,
+    userId: { type: String, required: true, unique: true },
+    requestId: { type: String, required: true, unique: true },
     dentistId: String,
+    date: String,
     time: String
 });
 

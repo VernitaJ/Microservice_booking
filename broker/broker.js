@@ -1,24 +1,44 @@
 import mqtt from 'mqtt';
+import confirmationHandler from './handler/handler.js';
 
-const MQTT_BROKER_URI = `mqtt://localhost:1883`;
-const BOOKING_FRONTEND_TOPIC = "frontend/dentistId/booking"; 
-const BOOKING_CONFIRMATION_TOPIC = "booking/dentist/";
+const MQTT_BROKER_URI = `mqtt://host.docker.internal:${process.env.BROKER_PORT}`;
+const MQTT_LOCALBROKER_URI = `mqtt://localhost:1883`
+
+const BOOKING_FRONTEND_TOPIC = "frontend/booking/"; 
+const BOOKING_REQRES_TOPIC = "dentistimo/booking/";
 
 const MQTT_SETTINGS = {
     clean: true,
     connectTimeout: 4000,
-    username: "booking_service",
-    password: "booking",
+    username: process.env.BROKER_USERNAME || "booking_service",
+    password: process.env.BROKER_PASSWORD || "booking",
 }
 
-const broker = mqtt.connect(MQTT_BROKER_URI, MQTT_SETTINGS);
+const theLoad = {
+    userId: "sadasd",
+    requestId: "asdasd",
+    dentistId: "asddsa",
+    issuance: "asdasdds",
+    date: Date.now(),
+    time: "23:30",
+    approved: "approve"
+}
 
-broker.subscribe(BOOKING_FRONTEND_TOPIC);
+const broker = mqtt.connect(MQTT_LOCALBROKER_URI, MQTT_SETTINGS);
 
-broker.on("connect", () => console.log("Connected! Hello there, " + process.env.BROKER_USERNAME || "undefined user!"));
+broker.on("connect", () => {
+    console.log("Connected! Hello there, " + process.env.BROKER_USERNAME || "undefined user!");
+    subscribe(BOOKING_REQRES_TOPIC);
+    subscribe(BOOKING_FRONTEND_TOPIC);
+    publish(BOOKING_REQRES_TOPIC+"req", theLoad)
+});
 
 broker.on("message", (topic, message) => {
-    
+    console.log("test");
+    if (topic === BOOKING_REQRES_TOPIC + "req") {
+        console.log("hi");
+        confirmationHandler(message);
+    }
 });
 
 broker.on("close", () => {
@@ -29,32 +49,30 @@ broker.on("error", (err) => {
     console.error(err.stack);
     broker.end();
 });
-
 // Publishes to MQTT
 const publish = (topic, message) => {
     const options = {
-        qos: 0,
-        retain: false
+        qos: 2,
+        retain: false, 
     }
     broker.publish(topic, JSON.stringify(message), options);
 }
 
 // Subscribes to MQTT
 const subscribe = (topic) => {
-    broker.subscribe(topic, { qos: 0 }, (error, accepted) => {
-        error ? console.log(error) : console.log(`${accepted[0].topic} was subscribed`);
+    broker.subscribe(topic, { qos: 2 }, (error, accepted) => {
+        error ? console.log(error) : console.log(`${accepted[0].topic} was subscribed to!`);
     });
 }
 
-const randomiseTopic = () => crypto.randomBytes(20).toString("hex");
 /* broker = accesses default MQTT broker commands
    publish/subscribe = convenience methods
 */
+
 export default {
     broker, 
     publish,
     subscribe,
-    randomiseTopic,
     BOOKING_FRONTEND_TOPIC,
-    BOOKING_CONFIRMATION_TOPIC
+    BOOKING_REQRES_TOPIC
 }

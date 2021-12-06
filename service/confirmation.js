@@ -1,20 +1,6 @@
 import Confirmation from '../model/confirmation.js';
 import ConfirmationCommands from '../command/confirmation.js'
 
-async function createConfirmation(payload) {
-    const { error } = ConfirmationCommands.createConfirmation(payload);
-    if (error) {
-        return console.log("Invalid payload body!");
-    }
-    return await Confirmation.create({
-        userId: payload.userId,
-        requestId: payload.requestId,
-        dentistId: payload.dentistId,
-        date: payload.date,
-        time: payload.time,
-    });
-}
-
 async function getConfirmation(id) {
     if (!id) {
         return Promise.reject("Undefined confirmation ID!");
@@ -25,6 +11,10 @@ async function getConfirmation(id) {
         return Promise.reject("Confirmation could not be found!");
     }
     return confirmation;
+}
+
+async function getAllConfirmations() {
+    return await Confirmation.find({});
 }
 
 async function deleteConfirmation(id) {

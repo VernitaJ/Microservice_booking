@@ -9,7 +9,7 @@ services:
       - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
     volumes:
       - db:/data/db
-  booking:
+  app:
     depends_on:
       - mongodb
     build: ./
@@ -22,3 +22,4 @@ services:
 
 volumes:
   db:
+
