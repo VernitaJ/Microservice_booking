@@ -1,43 +1,36 @@
 import mqtt from 'mqtt';
-import confirmationHandler from './handler/handler.js';
-
+import dotenv from 'dotenv';
+import handler from './handler/handler.js';
 const MQTT_BROKER_URI = `mqtt://host.docker.internal:${process.env.BROKER_PORT}`;
-const MQTT_LOCALBROKER_URI = `mqtt://localhost:1883`
+const MQTT_LOCALHOST_URI = `mqtt://localhost:1883`
 
-const BOOKING_FRONTEND_TOPIC = "frontend/booking/"; 
-const BOOKING_REQRES_TOPIC = "dentistimo/booking/";
+const BOOKING_FRONTEND_TOPIC = "frontend/booking/#"; 
+const BOOKING_REQRES_TOPIC = "dentistimo/booking/#";
+
+dotenv.config();
 
 const MQTT_SETTINGS = {
     clean: true,
     connectTimeout: 4000,
-    username: process.env.BROKER_USERNAME || "booking_service",
-    password: process.env.BROKER_PASSWORD || "booking",
+    username: process.env.BROKER_USERNAME,
+    password: process.env.BROKER_PASSWORD
 }
 
-const theLoad = {
-    userId: "sadasd",
-    requestId: "asdasd",
-    dentistId: "asddsa",
-    issuance: "asdasdds",
-    date: Date.now(),
-    time: "23:30",
-    approved: "approve"
-}
-
-const broker = mqtt.connect(MQTT_LOCALBROKER_URI, MQTT_SETTINGS);
+const broker = mqtt.connect(MQTT_BROKER_URI, MQTT_SETTINGS);
 
 broker.on("connect", () => {
     console.log("Connected! Hello there, " + process.env.BROKER_USERNAME || "undefined user!");
+    
     subscribe(BOOKING_REQRES_TOPIC);
     subscribe(BOOKING_FRONTEND_TOPIC);
-    publish(BOOKING_REQRES_TOPIC+"req", theLoad)
 });
 
 broker.on("message", (topic, message) => {
-    console.log("test");
-    if (topic === BOOKING_REQRES_TOPIC + "req") {
-        console.log("hi");
-        confirmationHandler(message);
+    if (topic === "dentistimo/booking/req") {
+        handler.handleBookingRequest(message.toString("utf-8"));
+    }
+    if (topic === `dentistimo/booking/availability/${message.requestId}/res`) {
+        handler.handleBookingResponse(message);
     }
 });
 
@@ -49,6 +42,7 @@ broker.on("error", (err) => {
     console.error(err.stack);
     broker.end();
 });
+
 // Publishes to MQTT
 const publish = (topic, message) => {
     const options = {

@@ -6,6 +6,7 @@ dotenv.config();
 
 // Variables
 const MONGO_URI = `mongodb://mongodb:${process.env.MONGODB_DOCKER_PORT}/bookingDB`;
+const LOCAL_MONGO_URI = `mongodb://localhost:${process.env.MONGODB_DOCKER_PORT}/bookingDB`
 
 mongoose.connect(
     MONGO_URI,
