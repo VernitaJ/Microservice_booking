@@ -27,9 +27,11 @@ broker.on("connect", () => {
 
 broker.on("message", (topic, message) => {
     if (topic === "dentistimo/booking/req") {
+        console.log(message.toString("utf-8"));
         handler.handleBookingRequest(message.toString("utf-8"));
     }
     if (topic === `dentistimo/booking/availability/${message.requestId}/res`) {
+        console.log(message.toString("utf-8"));
         handler.handleBookingResponse(message.toString("utf-8"));
     }
 });
