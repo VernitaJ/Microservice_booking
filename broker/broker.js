@@ -34,6 +34,9 @@ broker.on("message", (topic, message) => {
         console.log(message.toString("utf-8"));
         handler.handleBookingResponse(message.toString("utf-8"));
     }
+    if (topic === BOOKING_FRONTEND_TOPIC) {
+        message.toString("utf-8");
+    }
 });
 
 broker.on("close", () => {
