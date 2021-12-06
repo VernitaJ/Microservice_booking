@@ -30,7 +30,7 @@ broker.on("message", (topic, message) => {
         handler.handleBookingRequest(message.toString("utf-8"));
     }
     if (topic === `dentistimo/booking/availability/${message.requestId}/res`) {
-        handler.handleBookingResponse(message);
+        handler.handleBookingResponse(message.toString("utf-8"));
     }
 });
 
