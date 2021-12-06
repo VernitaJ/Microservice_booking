@@ -30,7 +30,7 @@ async function deleteConfirmation(id) {
 }
 
 export default {
-    createConfirmation,
     getConfirmation,
+    getAllConfirmations,
     deleteConfirmation
 }
