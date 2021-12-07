@@ -20,7 +20,7 @@ const dataRequest = Joi.object({
     requestParams: Joi.object({
         id: Joi.string()
             .alphanum()
-            .required(),
+            .optional(),
         page: Joi.number()
             .required()
             .optional(),

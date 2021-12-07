@@ -19,4 +19,9 @@ A microservice that takes in booking requests, passes booking confirmations to t
 "requestType": "getOne",
 "requestParam": "<insert id of confirmation as request>"
 }
+
+- @requestTypes:
+    - getConfirmation (gets one confirmation with the id as a requestParam)
+    - getAllConfirmations (gets all confirmations with the page and page size as a requestParam)
+    - deleteConfirmation (deletes confirmation with that specific ID as a request param)
 ```

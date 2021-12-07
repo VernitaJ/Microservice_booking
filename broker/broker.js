@@ -18,7 +18,7 @@ const MQTT_SETTINGS = {
     password: process.env.BROKER_PASSWORD
 }
 
-const broker = mqtt.connect(MQTT_LOCALHOST_URI, MQTT_SETTINGS);
+const broker = mqtt.connect(MQTT_BROKER_URI, MQTT_SETTINGS);
 
 broker.on("connect", () => {
     console.log("Connected! Hello there, " + process.env.BROKER_USERNAME || "undefined user!");
