@@ -17,7 +17,11 @@ A microservice that takes in booking requests, passes booking confirmations to t
 {
 "requestId": "uniqueId",
 "requestType": "getOne",
-"requestParam": "<insert id of confirmation as request>"
+"requestParam": {
+    "id": "<insert confirmation ID here",
+    "page": "<insert page here>",
+    "pageSize": "<insert page size (results contained in one page) here>"
+}
 }
 ```
 - @requestTypes:
