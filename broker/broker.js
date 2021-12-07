@@ -1,6 +1,8 @@
 import mqtt from 'mqtt';
 import dotenv from 'dotenv';
-import handler from './handler/handler.js';
+import BookingHandler from './handler/bookingHandler.js';
+import DataHandler from './handler/dataHandler.js';
+
 const MQTT_BROKER_URI = `mqtt://host.docker.internal:${process.env.BROKER_PORT}`;
 const MQTT_LOCALHOST_URI = `mqtt://localhost:1883`
 
@@ -15,7 +17,6 @@ const MQTT_SETTINGS = {
     username: process.env.BROKER_USERNAME,
     password: process.env.BROKER_PASSWORD
 }
-
 const broker = mqtt.connect(MQTT_BROKER_URI, MQTT_SETTINGS);
 
 broker.on("connect", () => {
@@ -28,14 +29,18 @@ broker.on("connect", () => {
 broker.on("message", (topic, message) => {
     if (topic === "dentistimo/booking/req") {
         console.log(message.toString("utf-8"));
-        handler.handleBookingRequest(message.toString("utf-8"));
+        BookingHandler.handleBookingRequest(message.toString("utf-8"));
     }
     if (topic === `dentistimo/booking/availability/${message.requestId}/res`) {
         console.log(message.toString("utf-8"));
-        handler.handleBookingResponse(message.toString("utf-8"));
+        BookingHandler.handleBookingResponse(message.toString("utf-8"));
+    }
+    if (topic === `frontend/booking/req`) {
+        console.log(message.toString("utf-8"));
+        DataHandler.handleDataRequest(message);
     }
     if (topic === BOOKING_FRONTEND_TOPIC) {
-        message.toString("utf-8");
+        console.log(message.toString("utf-8"));
     }
 });
 
@@ -72,6 +77,4 @@ export default {
     broker, 
     publish,
     subscribe,
-    BOOKING_FRONTEND_TOPIC,
-    BOOKING_REQRES_TOPIC
 }

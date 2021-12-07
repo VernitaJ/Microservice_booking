@@ -1,5 +1,7 @@
 import Confirmation from '../model/confirmation.js';
-import ConfirmationCommands from '../command/confirmation.js'
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 20;
 
 async function getConfirmation(id) {
     if (!id) {
@@ -13,8 +15,27 @@ async function getConfirmation(id) {
     return confirmation;
 }
 
-async function getAllConfirmations() {
-    return await Confirmation.find({});
+async function getAllConfirmations(page = DEFAULT_PAGE, pageSize = DEFAULT_PAGE_SIZE) {
+    if (isNaN(page)) {
+        return Promise.reject(`Page must be a number (value = ${page})`, 400);
+    }
+
+    if (isNaN(pageSize)) {
+        return Promise.reject(`Page size must be a number (value = ${pageSize})`, 400);
+    }
+
+    if (page < 1) {
+        return Promise.reject(`Page can't be lower than 1 (value = ${page})`, 400);
+    }
+
+    if (pageSize < 0) {
+        return Promise.reject(`Page size can't be lower than 0 (value = ${pageSize})`, 400);
+    }
+
+    return Confirmation.find()
+        .limit(pageSize)
+        .skip(page - 1)
+        .exec();
 }
 
 async function deleteConfirmation(id) {

@@ -9,3 +9,14 @@ A microservice that takes in booking requests, passes booking confirmations to t
 ## To run stand-alone locally:
 - `npm install` + `npm start`
 - Needs minor modifications under the hood to run locally. In `broker.js`, connect the MQTT to the `MQTT_LOCALHOST_URI` variable. Finally, in `main.js`, use the `LOCAL_MONGO_URI` to connect to a MongoDB instance.
+
+## To retrieve data from database:
+- Create a request with this following body:
+
+```JSON
+{
+"requestId": "uniqueId",
+"requestType": "getOne",
+"requestParam": "<insert id of confirmation as request>"
+}
+```
