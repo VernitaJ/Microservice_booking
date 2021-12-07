@@ -16,7 +16,7 @@ A microservice that takes in booking requests, passes booking confirmations to t
 ```JSON
 {
 "requestId": "uniqueId",
-"requestType": "getOne",
+"requestType": "getConfirmation || getAllConfirmations || deleteConfirmation",
 "requestParam": {
     "id": "<insert confirmation ID here",
     "page": "<insert page here>",
@@ -28,3 +28,5 @@ A microservice that takes in booking requests, passes booking confirmations to t
     - getConfirmation (gets one confirmation with the id as a requestParam)
     - getAllConfirmations (gets all confirmations with the page and page size as a requestParam)
     - deleteConfirmation (deletes confirmation with that specific ID as a request param)
+
+- All results, success or fail, will be published to ``frontend/booking/confirmation/res/${requestId}``
