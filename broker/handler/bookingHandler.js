@@ -22,10 +22,10 @@ const handleBookingResponse = async (req) => {
             time: req.time
         });
         console.log("Request approved!");
-        broker.publish(`dentistimo/booking/availability/${confirmation.requestId}/res`, confirmation);
+        broker.publish(`dentistimo/booking/${confirmation.requestId}/res`, confirmation);
     } else {
         console.log("Request rejected!")
-        broker.publish(`dentistimo/booking/availability/${req.requestId}/res`, "Booking request was rejected!");
+        broker.publish(`dentistimo/booking/${req.requestId}/res`, "Booking request was rejected!");
     }
 }
 

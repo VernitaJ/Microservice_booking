@@ -20,6 +20,8 @@ const validateBooking = Joi.object({
         .regex(/^([0-9]{2})\:([0-9]{2})$/)
         .required(),
     approved: Joi.string()
+        .alphanum()
+        .optional()
 });
 
 const updateBooking = Joi.object({
@@ -42,6 +44,8 @@ const updateBooking = Joi.object({
         .regex(/^([0-9]{2})\:([0-9]{2})$/)
         .required(),
     approved: Joi.string()
+        .alphanum()
+        .optional()
 });
 
 export default {

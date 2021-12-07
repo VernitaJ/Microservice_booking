@@ -17,7 +17,8 @@ const MQTT_SETTINGS = {
     username: process.env.BROKER_USERNAME,
     password: process.env.BROKER_PASSWORD
 }
-const broker = mqtt.connect(MQTT_BROKER_URI, MQTT_SETTINGS);
+
+const broker = mqtt.connect(MQTT_LOCALHOST_URI, MQTT_SETTINGS);
 
 broker.on("connect", () => {
     console.log("Connected! Hello there, " + process.env.BROKER_USERNAME || "undefined user!");
@@ -35,9 +36,9 @@ broker.on("message", (topic, message) => {
         console.log(message.toString("utf-8"));
         BookingHandler.handleBookingResponse(message.toString("utf-8"));
     }
-    if (topic === `frontend/booking/req`) {
+    if (topic === `frontend/booking/confirmation/req`) {
         console.log(message.toString("utf-8"));
-        DataHandler.handleDataRequest(message);
+        DataHandler.handleDataRequest(message.toString("utf-8"));
     }
     if (topic === BOOKING_FRONTEND_TOPIC) {
         console.log(message.toString("utf-8"));
