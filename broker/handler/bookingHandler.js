@@ -11,7 +11,7 @@ const handleBookingRequest = async (req) => {
     broker.publish(`dentistimo/booking/availability/req`, request);
     
     broker.broker.on("message", (topic, message) => {
-        if (topic === `dentistimo/booking/availability/${request.requestId}/res` && message.response.includes(`approve`)) {
+        if (topic === `dentistimo/booking/availability/${request.requestId}/res`) {
             console.log(message.toString("utf-8"));
             await BookingHandler.handleBookingResponse(request, message.toString("utf-8"));
         }
