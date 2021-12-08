@@ -10,9 +10,6 @@ const validateBooking = Joi.object({
     clinicId: Joi.string()
         .alphanum()
         .required(),
-    issuance: Joi.string()
-        .alphanum()
-        .required(),
     startAt: Joi.string()
         .alphanum()
         .required(),
@@ -32,9 +29,6 @@ const updateBooking = Joi.object({
         .alphanum()
         .required(),
     clinicId: Joi.string()
-        .alphanum()
-        .required(),
-    issuance: Joi.string()
         .alphanum()
         .required(),
     startAt: Joi.string()
