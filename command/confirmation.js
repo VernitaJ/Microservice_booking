@@ -1,9 +1,6 @@
 import Joi from 'joi';
 
 const createConfirmation = Joi.object({
-    userId: Joi.string()
-        .alphanum()
-        .required(),
     requestId: Joi.string()
         .alphanum()
         .required(),
@@ -19,9 +16,6 @@ const createConfirmation = Joi.object({
 });
 
 const updateConfirmation = Joi.object({
-    userId: Joi.string()
-        .alphanum()
-        .required(),
     requestId: Joi.string()
         .alphanum()
         .required(),

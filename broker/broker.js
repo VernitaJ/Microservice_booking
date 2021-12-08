@@ -32,10 +32,6 @@ broker.on("message", (topic, message) => {
         console.log(message.toString("utf-8"));
         BookingHandler.handleBookingRequest(message.toString("utf-8"));
     }
-    if (topic === `dentistimo/booking/availability/${message.requestId}/res`) {
-        console.log(message.toString("utf-8"));
-        BookingHandler.handleBookingResponse(message.toString("utf-8"));
-    }
     if (topic === `frontend/booking/confirmation/req`) {
         console.log(message.toString("utf-8"));
         DataHandler.handleDataRequest(message.toString("utf-8"));

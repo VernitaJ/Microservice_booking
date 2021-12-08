@@ -1,9 +1,6 @@
 import Joi from 'joi';
 
 const validateBooking = Joi.object({
-    userId: Joi.string()
-        .alphanum()
-        .required(),
     requestId: Joi.string()
         .alphanum()
         .required(),
@@ -13,18 +10,9 @@ const validateBooking = Joi.object({
     startAt: Joi.string()
         .alphanum()
         .required(),
-    endAt: Joi.string()
-        .alphanum()
-        .required(),
-    approved: Joi.string()
-        .alphanum()
-        .optional()
 });
 
 const updateBooking = Joi.object({
-    userId: Joi.string()
-        .alphanum()
-        .required(),
     requestId: Joi.string()
         .alphanum()
         .required(),
@@ -34,12 +22,6 @@ const updateBooking = Joi.object({
     startAt: Joi.string()
         .alphanum()
         .required(),
-    endAt: Joi.string()
-        .alphanum()
-        .required(),
-    approved: Joi.string()
-        .alphanum()
-        .optional()
 });
 
 export default {
