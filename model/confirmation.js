@@ -3,9 +3,10 @@ import mongoose from 'mongoose';
 const confirmation = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
     requestId: { type: String, required: true, unique: true },
-    dentistId: String,
-    date: String,
-    time: String
+    clinicId: { type: String, required: true },
+    startAt: { type: String, required: true },
+    endAt: { type: String, required: true },
+    approved: { type: String },
 });
 
 export default mongoose.model("Confirmation", confirmation);

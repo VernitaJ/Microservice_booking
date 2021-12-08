@@ -7,17 +7,17 @@ const validateBooking = Joi.object({
     requestId: Joi.string()
         .alphanum()
         .required(),
-    dentistId: Joi.string()
+    clinicId: Joi.string()
         .alphanum()
         .required(),
     issuance: Joi.string()
         .alphanum()
         .required(),
-    date: Joi.string()
+    startAt: Joi.string()
         .alphanum()
         .required(),
-    time: Joi.string()
-        .regex(/^([0-9]{2})\:([0-9]{2})$/)
+    endAt: Joi.string()
+        .alphanum()
         .required(),
     approved: Joi.string()
         .alphanum()
@@ -31,17 +31,17 @@ const updateBooking = Joi.object({
     requestId: Joi.string()
         .alphanum()
         .required(),
-    dentistId: Joi.string()
+    clinicId: Joi.string()
         .alphanum()
         .required(),
     issuance: Joi.string()
         .alphanum()
         .required(),
-    date: Joi.string()
+    startAt: Joi.string()
         .alphanum()
         .required(),
-    time: Joi.string()
-        .regex(/^([0-9]{2})\:([0-9]{2})$/)
+    endAt: Joi.string()
+        .alphanum()
         .required(),
     approved: Joi.string()
         .alphanum()
