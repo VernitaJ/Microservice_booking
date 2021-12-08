@@ -14,7 +14,6 @@ const handleBookingRequest = (req) => {
 const handleBookingResponse = async (request) => {
     const req = JSON.parse(request);
     if (req.approved === "approve") {
-        console.log("hi");
         const confirmation = await Confirmation.create({
             userId: req.userId,
             requestId: req.requestId,
