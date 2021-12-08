@@ -32,7 +32,7 @@ broker.on("message", (topic, message) => {
         console.log(message.toString("utf-8"));
         BookingHandler.handleBookingRequest(message.toString("utf-8"));
     }
-    if (topic === `dentistimo/booking/availability/${message.requestId}/res`) {
+    if (topic === `dentistimo/booking/availability/res` && message.response.includes(`approve`)) {
         console.log(message.toString("utf-8"));
         BookingHandler.handleBookingResponse(message.toString("utf-8"));
     }

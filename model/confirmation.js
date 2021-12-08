@@ -1,12 +1,10 @@
 import mongoose from 'mongoose';
 
 const confirmation = new mongoose.Schema({
-    userId: { type: String, required: true, unique: true },
     requestId: { type: String, required: true, unique: true },
     clinicId: { type: String, required: true },
     startAt: { type: String, required: true },
-    endAt: { type: String, required: true },
-    approved: { type: String },
+    endAt: { type: String, required: true }
 });
 
 export default mongoose.model("Confirmation", confirmation);
