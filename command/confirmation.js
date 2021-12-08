@@ -7,13 +7,14 @@ const createConfirmation = Joi.object({
     requestId: Joi.string()
         .alphanum()
         .required(),
-    dentistId: Joi.string()
+    clinicId: Joi.string()
         .alphanum()
         .required(),
-    date: Joi.date()
+    startAt: Joi.string()
+        .alphanum()
         .required(),
-    time: Joi.string()
-        .regex(/^([0-9]{2})\:([0-9]{2})$/) 
+    endAt: Joi.string()
+        .alphanum()
         .required()
 });
 
@@ -24,13 +25,14 @@ const updateConfirmation = Joi.object({
     requestId: Joi.string()
         .alphanum()
         .required(),
-    dentistId: Joi.string()
+    clinicId: Joi.string()
         .alphanum()
         .required(),
-    date: Joi.date()
+    startAt: Joi.string()
+        .alphanum()
         .required(),
-    time: Joi.string()
-        .regex(/^([0-9]{2})\:([0-9]{2})$/)
+    endAt: Joi.string()
+        .alphanum()
         .required()
 });
 

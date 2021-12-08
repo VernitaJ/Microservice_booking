@@ -4,15 +4,15 @@ import broker from '../broker.js'
 
 const handleBookingRequest = (req) => {
     const request = JSON.parse(req);
-    console.log(request);
     const { error } = BookingCommands.validateBooking.validate(request);
     if (error) {
         return console.log(error);
     }
-    broker.publish("dentistimo/booking/availability/req", request);
+    broker.publish(`dentistimo/booking/availability/req`, request);
 }
 
-const handleBookingResponse = async (req) => {
+const handleBookingResponse = async (request) => {
+    const req = JSON.parse(request);
     if (req.approved === "approve") {
         const confirmation = await Confirmation.create({
             userId: req.userId,
