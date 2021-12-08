@@ -8,7 +8,7 @@ const handleBookingRequest = (req) => {
     if (error) {
         return console.log(error);
     }
-    broker.publish(`dentistimo/booking/availability/${request.requestId}/res`, request);
+    broker.publish(`dentistimo/booking/availability/req`, request);
 }
 
 const handleBookingResponse = async (request) => {
