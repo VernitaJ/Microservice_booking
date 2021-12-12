@@ -2,6 +2,7 @@ import mqtt from 'mqtt';
 import dotenv from 'dotenv';
 import BookingHandler from './handler/bookingHandler.js';
 import DataHandler from './handler/dataHandler.js';
+import CircuitBreaker from 'opossum';
 
 const MQTT_BROKER_URI = `mqtt://host.docker.internal:${process.env.BROKER_PORT}`;
 const MQTT_LOCALHOST_URI = `mqtt://localhost:1883`
@@ -18,6 +19,17 @@ const MQTT_SETTINGS = {
     password: process.env.BROKER_PASSWORD
 }
 
+// Variables to create CircuitBreaker
+const CIRCUIT_BREAKER_SETTINGS = {
+    timeout: 5000,
+    errorThresholdPercentage: 50,
+    resetTimeout: 30000
+}
+
+// Initialise circuit breaker beforehand
+const bookingRequestBreaker = new CircuitBreaker(BookingHandler.handleBookingRequest, CIRCUIT_BREAKER_SETTINGS);
+const dataRequestBreaker = new CircuitBreaker(DataHandler.handleDataRequest, CIRCUIT_BREAKER_SETTINGS);
+
 const broker = mqtt.connect(MQTT_BROKER_URI, MQTT_SETTINGS);
 
 broker.on("connect", () => {
@@ -29,13 +41,20 @@ broker.on("connect", () => {
 
 broker.on("message", (topic, message) => {
     if (topic === "dentistimo/booking/req") {
-        console.log(message.toString("utf-8"));
-        BookingHandler.handleBookingRequest(message.toString("utf-8"));
+        bookingRequestBreaker.fallback(() => console.log("Could not accept request at this time!"))
+        bookingRequestBreaker.fire(message.toString("utf-8"))
+            .then(console.log("Request accepted!"))
+            .catch(console.error);
     }
+
     if (topic === `frontend/booking/confirmation/req`) {
         console.log(message.toString("utf-8"));
-        DataHandler.handleDataRequest(message.toString("utf-8"));
+        dataRequestBreaker.fallback(() => console.log("Could not accept request at this time!"))
+        dataRequestBreaker.fire(message.toString("utf-8"))
+            .then(console.log("Request accepted!"))
+            .catch(console.error);
     }
+
     if (topic === BOOKING_FRONTEND_TOPIC) {
         console.log(message.toString("utf-8"));
     }

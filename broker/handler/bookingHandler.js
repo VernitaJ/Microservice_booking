@@ -1,9 +1,10 @@
 import BookingCommands from '../../command/booking.js';
 import Confirmation from '../../model/confirmation.js';
-import broker from '../broker.js'
+import broker from '../broker.js';
 
 const handleBookingRequest = async (req) => {
     const request = JSON.parse(req);
+    console.log(request);
     const { error } = BookingCommands.validateBooking.validate(request);
     if (error) {
         return console.log(error);
@@ -12,8 +13,7 @@ const handleBookingRequest = async (req) => {
     
     broker.broker.on("message", (topic, message) => {
         if (topic === `dentistimo/booking/availability/${request.requestId}/res`) {
-            console.log(message.toString("utf-8"));
-            await BookingHandler.handleBookingResponse(request, message.toString("utf-8"));
+            handleBookingResponse(request, message.toString("utf-8"));
         }
     });
 }
@@ -28,10 +28,8 @@ const handleBookingResponse = async (req, res) => {
             startAt: request.startAt,
             endAt: request.endAt
         });
-        console.log("Request approved!");
         broker.publish(`dentistimo/booking/${confirmation.requestId}/res`, confirmation);
     } else {
-        console.log("Request rejected!")
         broker.publish(`dentistimo/booking/${request.requestId}/res`, "Booking request was rejected!");
     }
 }
