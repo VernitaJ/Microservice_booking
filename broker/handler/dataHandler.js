@@ -1,7 +1,6 @@
 import ConfirmationService from '../../service/confirmation.js';
 import DataRequestCommands from '../../command/dataRequest.js';
 import broker from '../broker.js';
-
 /*
     A successful data request is passed to this handler. See dataRequest.js in the command folder for an example request body.
     A data request consists of a/an:
@@ -14,23 +13,21 @@ import broker from '../broker.js';
 
     All data is sent back with this following MQTT topic: "frontend/booking/confirmation/res/${requestId}"
 */
-
 const handleDataRequest = async (req) => {
     const request = JSON.parse(req);
     const { error } = DataRequestCommands.dataRequest.validate(request);
     if (error) {
         return console.log(error);
     }
-
     switch (request.requestType) {
         case "getConfirmation":
-            getConfirmation(request.id, request.requestParams.id);
+            await getConfirmation(request.id, request.requestParams.id);
             break;
         case "getAllConfirmations":
-            getAllConfirmations(request.id, request.requestParams.page, request.requestParams.pageSize);
+            await getAllConfirmations(request.id, request.requestParams.page, request.requestParams.pageSize);
             break;
         case "deleteConfirmation":
-            deleteConfirmation(request.id, request.requestParams.id);
+            await deleteConfirmation(request.id, request.requestParams.id);
             break;
         default:
             console.log("Invalid request! You can get a confirmation, get all confirmations, or delete a confirmation.")
