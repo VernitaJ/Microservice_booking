@@ -10,21 +10,9 @@ const validateBooking = Joi.object({
     startAt: Joi.string()
         .alphanum()
         .required(),
-});
-
-const updateBooking = Joi.object({
-    requestId: Joi.string()
-        .alphanum()
-        .required(),
-    clinicId: Joi.string()
-        .alphanum()
-        .required(),
-    startAt: Joi.string()
+    endAt: Joi.string()
         .alphanum()
         .required(),
 });
 
-export default {
-    validateBooking,
-    updateBooking
-}
+export default validateBooking;

@@ -1,11 +1,11 @@
 import BookingCommands from '../../command/booking.js';
-import Confirmation from '../../model/confirmation.js';
 import broker from '../broker.js';
+import Booking from '../../model/booking.js';
 
 const handleBookingRequest = async (req) => {
     const request = JSON.parse(req);
     console.log(request);
-    const { error } = BookingCommands.validateBooking.validate(request);
+    const { error } = BookingCommands.validate(request);
     if (error) {
         return console.log(error);
     }
@@ -13,7 +13,7 @@ const handleBookingRequest = async (req) => {
     
     broker.broker.on("message", (topic, message) => {
         if (topic === `dentistimo/booking/availability/${request.requestId}/res`) {
-            handleBookingResponse(request, message.toString("utf-8"));
+            handleBookingResponse(JSON.stringify(request), message.toString("utf-8"));
         }
     });
 }
@@ -21,8 +21,10 @@ const handleBookingRequest = async (req) => {
 const handleBookingResponse = async (req, res) => {
     const request = JSON.parse(req);
     const response = JSON.parse(res);
+    console.log(request);
+    console.log(response);
     if (response.response === "approve") {
-        const confirmation = await Confirmation.create({
+        const confirmation = await Booking.create({
             requestId: request.requestId,
             clinicId: request.clinicId,
             startAt: request.startAt,
