@@ -1,4 +1,4 @@
-import ConfirmationService from '../../service/confirmation.js';
+import BookingService from '../../service/booking.js';
 import DataRequestCommands from '../../command/dataRequest.js';
 import broker from '../broker.js';
 /*
@@ -36,7 +36,7 @@ const handleDataRequest = async (req) => {
 }
 
 const getConfirmation = async (requestId, requestParamId) => {
-    const confirmation = await ConfirmationService.getConfirmation(requestParamId);
+    const confirmation = await BookingService.getConfirmation(requestParamId);
     if (!confirmation) {
         broker.publish(`frontend/booking/confirmation/res/${requestId}`, `Could not find this confirmation!`);
     } else {
@@ -45,7 +45,7 @@ const getConfirmation = async (requestId, requestParamId) => {
 }
 
 const getAllConfirmations = async (requestId, page, pageSize) => {
-    const confirmations = await ConfirmationService.getAllConfirmations(page, pageSize);
+    const confirmations = await BookingService.getAllConfirmations(page, pageSize);
     if (!confirmations) {
         broker.publish(`frontend/booking/confirmation/res/${requestId}`, `could not find any confirmations!`);
     } else {
@@ -54,7 +54,7 @@ const getAllConfirmations = async (requestId, page, pageSize) => {
 }
 
 const deleteConfirmation = async (requestId, requestParamId) => {
-    const confirmation = await ConfirmationService.deleteConfirmation(requestParamId); 
+    const confirmation = await BookingService.deleteConfirmation(requestParamId); 
     if (!confirmation) {
         broker.publish(`frontend/booking/confirmation/res/${requestId}`, `Could not delete!`);
     } else {
