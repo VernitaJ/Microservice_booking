@@ -28,7 +28,11 @@ const handleBookingResponse = async (req, res) => {
             requestId: request.requestId,
             clinicId: request.clinicId,
             startAt: request.startAt,
-            endAt: request.endAt
+            endAt: request.endAt,
+            patientName: request.patientName,
+            patientEmail: request.patientEmail,
+            patientPhone: request.patientPhone,
+            message: request.message
         });
         broker.publish(`dentistimo/booking/${confirmation.requestId}/res`, confirmation);
     } else {
