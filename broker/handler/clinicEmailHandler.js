@@ -30,6 +30,24 @@ const handleImport = async (req) => {
       }
 }
 
+const getClinicEmail = async (clinicId) => {
+  try{
+    ClinicEmail.findOne({clinicId: clinicId}, (err, clinic) => {
+      if(err){
+        console.log(err)
+      }
+      else{
+        if(clinic.email){
+          return clinic.email
+        }
+        return null
+      }
+    })
+  }catch(err){console.log(err)}
+
+}
+
 export default {
-    handleImport
+    handleImport,
+    getClinicEmail
 }
