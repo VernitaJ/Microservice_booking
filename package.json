@@ -5,6 +5,7 @@
     "joi": "^17.4.2",
     "mongoose": "^6.0.13",
     "mqtt": "^4.2.8",
+    "nodemailer": "^6.7.2",
     "opossum": "^6.2.1"
   },
   "scripts": {
