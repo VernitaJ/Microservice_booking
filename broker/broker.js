@@ -2,6 +2,7 @@ import mqtt from 'mqtt';
 import dotenv from 'dotenv';
 import BookingHandler from './handler/bookingHandler.js';
 import DataHandler from './handler/dataHandler.js';
+import ClinicEmailHandler from './handler/clinicEmailHandler.js';
 import CircuitBreaker from 'opossum';
 
 const MQTT_BROKER_URI = `mqtt://host.docker.internal:${process.env.BROKER_PORT}`;
@@ -9,6 +10,8 @@ const MQTT_LOCALHOST_URI = `mqtt://localhost:1883`
 
 const BOOKING_FRONTEND_TOPIC = "frontend/booking/#"; 
 const BOOKING_REQRES_TOPIC = "dentistimo/booking/#";
+const CLINIC_EMAIL_IMPORT_TOPIC = "dentist/email";
+
 
 dotenv.config();
 
@@ -29,6 +32,7 @@ const CIRCUIT_BREAKER_SETTINGS = {
 // Initialise circuit breaker beforehand
 const bookingRequestBreaker = new CircuitBreaker(BookingHandler.handleBookingRequest, CIRCUIT_BREAKER_SETTINGS);
 const dataRequestBreaker = new CircuitBreaker(DataHandler.handleDataRequest, CIRCUIT_BREAKER_SETTINGS);
+const clinicEmailImportBreaker = new CircuitBreaker(ClinicEmailHandler.handleImport, CIRCUIT_BREAKER_SETTINGS);
 
 const broker = mqtt.connect(MQTT_BROKER_URI, MQTT_SETTINGS);
 
@@ -52,6 +56,13 @@ broker.on("message", (topic, message) => {
         dataRequestBreaker.fallback(() => console.log("Could not accept request at this time!"))
         dataRequestBreaker.fire(message.toString("utf-8"))
             .then(console.log("Request accepted!"))
+            .catch(console.error);
+    }
+
+    if (topic === CLINIC_EMAIL_IMPORT_TOPIC) {
+        clinicEmailImportBreaker.fallback(() => console.log("Could not accept request at this time!"))
+        clinicEmailImportBreaker.fire(message.toString("utf-8"))
+            .then(console.log("Import request accepted!"))
             .catch(console.error);
     }
 
