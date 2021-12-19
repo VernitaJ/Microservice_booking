@@ -1,6 +1,11 @@
 import BookingCommands from '../../command/booking.js';
 import broker from '../broker.js';
 import Booking from '../../model/booking.js';
+import sendEmail from '../../util/sendEmail.js';
+import constructDentistNotification from '../../util/constructDentistNotification.js';
+import constructHTMLDentistNotification from '../../util/constructHTMLDentistNotification.js';
+import ClinicEmail from '../../model/clinicEmail.js';
+import { compareAsc, format } from 'date-fns';
 
 const handleBookingRequest = async (req) => {
     const request = JSON.parse(req);
@@ -35,9 +40,30 @@ const handleBookingResponse = async (req, res) => {
             message: request.message
         });
         broker.publish(`dentistimo/booking/${confirmation.requestId}/res`, confirmation);
+        sendEmailToDentist(request)
     } else {
         broker.publish(`dentistimo/booking/${request.requestId}/res`, "Booking request was rejected!");
     }
+}
+
+const sendEmailToDentist = (request) => {
+    try{
+        ClinicEmail.findOne({clinicId: request.clinicId}, (err, clinic) => {
+          if(err){
+            console.log(err)
+          }
+          else{
+            if(clinic.email){
+                const date = format(new Date(request.startAt), 'yyyy-MM-dd');
+                const startAt = format(new Date(request.startAt), 'hh:mm');
+                const endAt = format(new Date(request.endAt), 'hh:mm');
+                const message = constructDentistNotification(request, {date, startAt, endAt});
+                const messageHTML = constructHTMLDentistNotification(request, {date, startAt, endAt});
+                sendEmail(clinic.email, clinic.email, "New appointment", message, messageHTML)
+            }
+          }
+        })
+      }catch(err){console.log(err)}
 }
 
 export default {

@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export default async (
-  from,
   recipientName,
   recipientEmail,
   subject,
@@ -13,17 +12,15 @@ export default async (
 ) => {
   try {
     let transporter = nodemailer.createTransport({
-      host: process.env.MAILER_SERVER,
-      port: process.env.MAILER_PORT,
-      secure: false,
+      service: 'gmail',
       auth: {
-        user: process.env.MAILER_USERNAME,
-        pass: process.env.MAILER_PASSWORD,
-      },
+        user: process.env.MAILER_SMTP_USERNAME,
+        pass: process.env.MAILER_SMTP_PASSWORD,
+      }
     });
 
     let info = await transporter.sendMail({
-      from: `"Dentistimo" <${from}>`,
+      from: `"Dentistimo" <${process.env.MAILER_USERNAME}>`,
       to: `${recipientName}, ${recipientEmail}`,
       subject: subject,
       text: message,

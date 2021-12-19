@@ -1,4 +1,4 @@
-export default (details) => (`<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+export default (details, time) => (`<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
 <!--[if gte mso 9]>
@@ -194,7 +194,7 @@ a[x-apple-data-detectors='true'] {
   <tr>
     <td style="padding-right: 0px;padding-left: 0px;" align="center">
       
-      <img align="center" border="0" src="https://ibb.co/0Mv8f9W" alt="logo" title="logo" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 6%;max-width: 34.8px;" width="34.8"/>
+      <img align="center" border="0" src="https://i.ibb.co/bBDqrvy/image-1.png" alt="logo" title="logo" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 6%;max-width: 34.8px;" width="34.8"/>
       
     </td>
   </tr>
@@ -247,7 +247,7 @@ a[x-apple-data-detectors='true'] {
         
   <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
     <p dir="ltr" style="line-height: 140%; font-size: 14px;"><span style="color: #666666;"><span style="font-size: 18px; line-height: 25.2px;">👤&nbsp; &nbsp; &nbsp;Patient Name: ${details.patientName}<br />✉️&nbsp; &nbsp; &nbsp;Patient Email: ${details.patientEmail}<br />📞&nbsp; &nbsp; &nbsp;Patient Phone: ${details.patientPhone}</span></span></p>
-<p dir="ltr" style="line-height: 140%; font-size: 14px;"><span style="color: #666666;"><span style="font-size: 18px; line-height: 25.2px;">⏱&nbsp; &nbsp; &nbsp;Time: ${details.startAt}-${details.endAt}-<br />💬&nbsp; &nbsp; &nbsp;Message: ${details.message}-<br /></span></span></p>
+<p dir="ltr" style="line-height: 140%; font-size: 14px;"><span style="color: #666666;"><span style="font-size: 18px; line-height: 25.2px;">📅&nbsp; &nbsp; &nbsp;Date: ${time.date}<br />⏱&nbsp; &nbsp; &nbsp;Time: ${time.startAt}&nbsp;-&nbsp;${time.endAt}<br />💬&nbsp; &nbsp; &nbsp;Message: ${details.message}<br /></span></span></p>
 <p style="font-size: 14px; line-height: 140%;">&nbsp;</p>
   </div>
 
@@ -262,7 +262,7 @@ a[x-apple-data-detectors='true'] {
       <td style="overflow-wrap:break-word;word-break:break-word;padding:40px 40px 30px;font-family:'Lato',sans-serif;" align="left">
         
   <div style="line-height: 140%; text-align: left; word-wrap: break-word;">
-    <p style="font-size: 14px; line-height: 140%;"><span style="color: #888888; font-size: 12px; line-height: 16.8px;"><span style="line-height: 16.8px; font-size: 12px;">RequestID: ${details.requestId}-</span></span><br /><span style="color: #888888; font-size: 12px; line-height: 16.8px;"><span style="line-height: 16.8px; font-size: 12px;">&nbsp;</span></span></p>
+    <p style="font-size: 14px; line-height: 140%;"><span style="color: #888888; font-size: 12px; line-height: 16.8px;"><span style="line-height: 16.8px; font-size: 12px;">RequestID: ${details.requestId}</span></span><br /><span style="color: #888888; font-size: 12px; line-height: 16.8px;"><span style="line-height: 16.8px; font-size: 12px;">&nbsp;</span></span></p>
   </div>
 
       </td>
