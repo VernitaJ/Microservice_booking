@@ -32,29 +32,11 @@ const dataRequestBreaker = new CircuitBreaker(DataHandler.handleDataRequest, CIR
 
 const broker = mqtt.connect(MQTT_BROKER_URI, MQTT_SETTINGS);
 
-
-const EXAMPLE_PAYLOAD = {
-    requestId: '123123',
-    clinicId: '12312132',
-    startAt: '1123123123123',
-    endAt: '123123312231'
-}
-
-const TEST_RESPONSE = {
-    response: 'approve'
-}
-
 broker.on("connect", () => {
     console.log("Connected! Hello there, " + process.env.BROKER_USERNAME || "undefined user!");
     
     subscribe(BOOKING_REQRES_TOPIC);
     subscribe(BOOKING_FRONTEND_TOPIC);
-
-    publish("dentistimo/booking/req", EXAMPLE_PAYLOAD)
-
-    setTimeout(function() {
-        publish(`dentistimo/booking/availability/${EXAMPLE_PAYLOAD.requestId}/res`, TEST_RESPONSE)
-    }, 2000)
 });
 
 broker.on("message", (topic, message) => {

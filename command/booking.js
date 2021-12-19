@@ -2,16 +2,14 @@ import Joi from 'joi';
 
 const validateBooking = Joi.object({
     requestId: Joi.string()
-        .alphanum()
         .required(),
-    clinicId: Joi.string()
-        .alphanum()
+    clinicId: Joi.number()
         .required(),
     startAt: Joi.string()
-        .alphanum()
+        .regex(/^([0-9]{2})\:([0-9]{2})$/)
         .required(),
     endAt: Joi.string()
-        .alphanum()
+        .regex(/^([0-9]{2})\:([0-9]{2})$/)
         .required(),
 });
 
