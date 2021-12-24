@@ -19,7 +19,8 @@ services:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     stdin_open: true
     tty: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   db:
-
