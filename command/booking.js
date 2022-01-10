@@ -10,11 +10,11 @@ const validateBooking = Joi.object({
     endAt: Joi.string()
         .required(),
     patientName: Joi.string()
-        .optional(),
+        .required(),
     patientEmail: Joi.string()
-        .optional(),
+        .required(),
     patientPhone: Joi.string()
-        .optional(),
+        .required(),
     message: Joi.string()
         .optional(),
 });

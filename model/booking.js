@@ -5,9 +5,9 @@ const booking = new mongoose.Schema({
     clinicId: { type: String, required: true },
     startAt: { type: String, required: true },
     endAt: { type: String, required: true },
-    patientName: { type: String },
-    patientEmail: { type: String },
-    patientPhone: { type: String },
+    patientName: { type: String, required: true },
+    patientEmail: { type: String, required: true},
+    patientPhone: { type: String, required: true },
     message: { type: String },
 });
 
