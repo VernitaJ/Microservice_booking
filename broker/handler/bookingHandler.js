@@ -7,12 +7,16 @@ import constructHTMLDentistNotification from '../../util/constructHTMLDentistNot
 import ClinicEmail from '../../model/clinicEmail.js';
 import { compareAsc, format } from 'date-fns';
 
+let concurrentRequests = 0;
+
 const handleBookingRequest = async (req) => {
     const request = JSON.parse(req);
     const { error } = BookingCommands.validate(request);
     if (error) {
         return console.log(error);
     }
+
+    console.log(concurrentRequests++);
     broker.publish(`dentistimo/booking/availability/req`, request);
     
     broker.broker.on("message", (topic, message) => {

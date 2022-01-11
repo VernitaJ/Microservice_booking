@@ -13,7 +13,6 @@ const BOOKING_FRONTEND_TOPIC = "frontend/booking/#";
 const BOOKING_REQRES_TOPIC = "dentistimo/booking/#";
 const CLINIC_EMAIL_IMPORT_TOPIC = "dentist/email";
 
-
 dotenv.config();
 
 const MQTT_SETTINGS = {
@@ -25,13 +24,21 @@ const MQTT_SETTINGS = {
 
 // Variables to create CircuitBreaker
 const CIRCUIT_BREAKER_SETTINGS = {
-    timeout: 5000,
+    /*
+    @timeout: If method cannot complete within 5000ms, it is considered failed
+    @errorThresholdPercentage: If 50% of method calls fail, the circuit breaker is activated and all requests are blocked
+    @resetTimeout: If the circuit breaker is activated due to these circumstances, wait 30000ms before reevaluating circumstances
+    */
+    timeout: 5000, 
     errorThresholdPercentage: 50,
     resetTimeout: 30000
 }
 
 // Variables to create Rate Limiter
 const rateLimiter = new RateLimiter({
+    /*
+    @tokensPerInterval + interval: One request equals one token. This microservice accepts a rate throughput of 60 requests/min
+    */
     tokensPerInterval: 60,
     interval: "minute",
     fireImmediately: true,
@@ -44,6 +51,8 @@ const clinicEmailImportBreaker = new CircuitBreaker(ClinicEmailHandler.handleImp
 
 const broker = mqtt.connect(MQTT_BROKER_URI, MQTT_SETTINGS);
 
+broker.setMaxListeners(Infinity);
+
 broker.on("connect", () => {
     console.log("Connected! Hello there, " + process.env.BROKER_USERNAME || "undefined user!");
     
@@ -51,7 +60,6 @@ broker.on("connect", () => {
     subscribe(BOOKING_FRONTEND_TOPIC);
 
     // For testing purposes! 
-
     // for (let i = 0; i < 61; i++) {
     //     publish(`dentistimo/booking/req`, {
     //         requestId: 'fdd00011-be48-40fa-b31a-e246e6ca4503',
@@ -60,7 +68,7 @@ broker.on("connect", () => {
     //         endAt: '2022-01-20T08:30:00.000Z',
     //         patientName: 'ayylmao',
     //         patientEmail: 'ayylmao@gmail.com',
-    //         patientPhone: '0705204888'
+    //         patientPhone: '112'
     //     });
     // }
 });
