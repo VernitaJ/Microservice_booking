@@ -41,7 +41,7 @@ const handleBookingResponse = async (req, res) => {
             message: request.message
         });
         broker.publish(`dentistimo/booking/${confirmation.requestId}/res`, confirmation);
-        // sendEmailToDentist(request)
+        sendEmailToDentist(request)
     } else {
         broker.publish(`dentistimo/booking/${request.requestId}/res`, "Booking request was rejected!");
     }
@@ -54,7 +54,7 @@ const sendEmailToDentist = (request) => {
             console.log(err)
           }
           else{
-            if(clinic.email){
+            if(clinic && clinic.email){
                 const date = format(new Date(request.startAt), 'yyyy-MM-dd');
                 const startAt = format(new Date(request.startAt), 'hh:mm');
                 const endAt = format(new Date(request.endAt), 'hh:mm');
