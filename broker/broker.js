@@ -49,6 +49,7 @@ broker.on("connect", () => {
     
     subscribe(BOOKING_REQRES_TOPIC);
     subscribe(BOOKING_FRONTEND_TOPIC);
+    subscribe(CLINIC_EMAIL_IMPORT_TOPIC);
 
     // For testing purposes! 
 
@@ -87,10 +88,15 @@ broker.on("message", async (topic, message) => {
     }
 
     if (topic === CLINIC_EMAIL_IMPORT_TOPIC) {
+        const remainingTokens = await rateLimiter.removeTokens(1);
         clinicEmailImportBreaker.fallback(() => console.log("Could not accept request at this time!"))
-        clinicEmailImportBreaker.fire(message.toString("utf-8"))
-            .then(console.log("Import request accepted!"))
+        if (remainingTokens > 0) {
+            clinicEmailImportBreaker.fire(message.toString("utf-8"))
+            .then(console.log("Import request accepted!", message.toString("utf-8")))
             .catch(console.error);
+        } else {
+            console.log("Service is overloaded! Try again later.")
+        }
     }
 
     if (topic === BOOKING_FRONTEND_TOPIC) {
