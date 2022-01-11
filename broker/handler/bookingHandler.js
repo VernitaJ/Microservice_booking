@@ -9,7 +9,6 @@ import { compareAsc, format } from 'date-fns';
 
 const handleBookingRequest = async (req) => {
     const request = JSON.parse(req);
-    console.log(request);
     const { error } = BookingCommands.validate(request);
     if (error) {
         return console.log(error);
@@ -26,8 +25,6 @@ const handleBookingRequest = async (req) => {
 const handleBookingResponse = async (req, res) => {
     const request = JSON.parse(req);
     const response = JSON.parse(res);
-    console.log(request);
-    console.log(response);
     if (response.response === "approve") {
         const confirmation = await Booking.create({
             requestId: request.requestId,
@@ -40,7 +37,7 @@ const handleBookingResponse = async (req, res) => {
             message: request.message
         });
         broker.publish(`dentistimo/booking/${confirmation.requestId}/res`, confirmation);
-        sendEmailToDentist(request)
+        // sendEmailToDentist(request)
     } else {
         broker.publish(`dentistimo/booking/${request.requestId}/res`, "Booking request was rejected!");
     }

@@ -1,6 +1,7 @@
 import BookingService from '../../service/booking.js';
 import DataRequestCommands from '../../command/dataRequest.js';
 import broker from '../broker.js';
+
 /*
     A successful data request is passed to this handler. See dataRequest.js in the command folder for an example request body.
     A data request consists of a/an:
@@ -36,7 +37,7 @@ const handleDataRequest = async (req) => {
 }
 
 const getConfirmation = async (requestId, requestParamId) => {
-    const confirmation = await BookingService.getConfirmation(requestParamId);
+    const confirmation = await BookingService.getBooking(requestParamId);
     if (!confirmation) {
         broker.publish(`frontend/booking/confirmation/res/${requestId}`, `Could not find this confirmation!`);
     } else {
@@ -45,7 +46,7 @@ const getConfirmation = async (requestId, requestParamId) => {
 }
 
 const getAllConfirmations = async (requestId, page, pageSize) => {
-    const confirmations = await BookingService.getAllConfirmations(page, pageSize);
+    const confirmations = await BookingService.getAllBookings(page, pageSize);
     if (!confirmations) {
         broker.publish(`frontend/booking/confirmation/res/${requestId}`, `could not find any confirmations!`);
     } else {
@@ -54,7 +55,7 @@ const getAllConfirmations = async (requestId, page, pageSize) => {
 }
 
 const deleteConfirmation = async (requestId, requestParamId) => {
-    const confirmation = await BookingService.deleteConfirmation(requestParamId); 
+    const confirmation = await BookingService.deleteBooking(requestParamId); 
     if (!confirmation) {
         broker.publish(`frontend/booking/confirmation/res/${requestId}`, `Could not delete!`);
     } else {

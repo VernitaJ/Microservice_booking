@@ -19,7 +19,6 @@ const dataRequest = Joi.object({
         .required(),
     requestParams: Joi.object({
         id: Joi.string()
-            .alphanum()
             .optional(),
         page: Joi.number()
             .required()

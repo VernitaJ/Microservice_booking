@@ -4,6 +4,7 @@ import BookingHandler from './handler/bookingHandler.js';
 import DataHandler from './handler/dataHandler.js';
 import ClinicEmailHandler from './handler/clinicEmailHandler.js';
 import CircuitBreaker from 'opossum';
+import { RateLimiter } from 'limiter';
 
 const MQTT_BROKER_URI = `mqtt://host.docker.internal:${process.env.BROKER_PORT}`;
 const MQTT_LOCALHOST_URI = `mqtt://localhost:1883`
@@ -29,6 +30,13 @@ const CIRCUIT_BREAKER_SETTINGS = {
     resetTimeout: 30000
 }
 
+// Variables to create Rate Limiter
+const rateLimiter = new RateLimiter({
+    tokensPerInterval: 60,
+    interval: "minute",
+    fireImmediately: true,
+});
+
 // Initialise circuit breaker beforehand
 const bookingRequestBreaker = new CircuitBreaker(BookingHandler.handleBookingRequest, CIRCUIT_BREAKER_SETTINGS);
 const dataRequestBreaker = new CircuitBreaker(DataHandler.handleDataRequest, CIRCUIT_BREAKER_SETTINGS);
@@ -41,22 +49,41 @@ broker.on("connect", () => {
     
     subscribe(BOOKING_REQRES_TOPIC);
     subscribe(BOOKING_FRONTEND_TOPIC);
+
+    // For testing purposes! 
+
+    // for (let i = 0; i < 61; i++) {
+    //     publish(`dentistimo/booking/req`, {
+    //         requestId: 'fdd00011-be48-40fa-b31a-e246e6ca4503',
+    //         clinicId: '2',
+    //         startAt: '2022-01-20T08:00:00.000Z',
+    //         endAt: '2022-01-20T08:30:00.000Z',
+    //         patientName: 'ayylmao',
+    //         patientEmail: 'ayylmao@gmail.com',
+    //         patientPhone: '0705204888'
+    //     });
+    // }
 });
 
-broker.on("message", (topic, message) => {
+broker.on("message", async (topic, message) => {
     if (topic === "dentistimo/booking/req") {
+        const remainingTokens = await rateLimiter.removeTokens(1);
         bookingRequestBreaker.fallback(() => console.log("Could not accept request at this time!"))
-        bookingRequestBreaker.fire(message.toString("utf-8"))
-            .then(console.log("Request accepted!"))
-            .catch(console.error);
+        if (remainingTokens > 0) {
+            bookingRequestBreaker.fire(message.toString("utf-8"))
+        } else {
+            console.log("Service is overloaded! Try again later.")
+        }
     }
 
     if (topic === `frontend/booking/confirmation/req`) {
-        console.log(message.toString("utf-8"));
-        dataRequestBreaker.fallback(() => console.log("Could not accept request at this time!"))
-        dataRequestBreaker.fire(message.toString("utf-8"))
-            .then(console.log("Request accepted!"))
-            .catch(console.error);
+        const remainingTokens = await rateLimiter.removeTokens(1);
+        dataRequestBreaker.fallback(() => console.log("Could not accept request at this time!"));
+        if (remainingTokens > 0) {
+            dataRequestBreaker.fire(message.toString("utf-8"))
+        } else {
+            console.log("Service is overloaded! Try again later.")
+        }
     }
 
     if (topic === CLINIC_EMAIL_IMPORT_TOPIC) {
